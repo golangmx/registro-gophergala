@@ -42,7 +42,7 @@ app: frontend backend
 	cp -r static/dist build/static
 
 docker: frontend backend_linux
-		docker-compose build
+	docker-compose build
 
 clean:
 		rm -rf bin
