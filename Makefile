@@ -3,7 +3,7 @@ GB := $(shell command -v gb)
 GULP := $(shell command -v gulp)
 
 # default
-all: clean app
+all: app
 
 # archivos requeridos
 bin/registro:
@@ -36,7 +36,7 @@ app: frontend backend
 	cp -r static/dist build/static
 
 docker: frontend backend_linux
-		docker build -t gato .
+		docker build -t registro-gophergala .
 
 clean:
 		rm -rf bin

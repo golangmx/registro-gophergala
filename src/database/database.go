@@ -13,7 +13,8 @@ var db *sql.DB
 func init() {
 	// declarar err para evitar hacer shadowing a db
 	var err error
-	db, err = sql.Open("postgres", "host=db user=registro sslmode=disable")
+	db, err = sql.Open("postgres",
+		"host=db user=ggala password=gopherz dbname=gophergala sslmode=disable")
 	if err != nil {
 		log.Fatalf("no se puede abrir conexión a db: %s", err.Error())
 	}
