@@ -28,16 +28,12 @@ endif
 # aliases
 frontend: static/dist
 backend: bin/registro
-backend_linux: bin/gato-linux-amd64
+backend_linux: bin/registro-linux-amd64
 
 app: frontend backend
 	mkdir -p build
 	cp -r bin/registro build/registro
 	cp -r static/dist build/static
-
-#run: app
-#	cd build && \
-#	./registro
 
 docker: frontend backend_linux
 		docker build -t gato .

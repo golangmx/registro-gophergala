@@ -1,5 +1,6 @@
-MAINTAINER Arturo Vergara <hello@arturovm.me>
 FROM scratch
+
+MAINTAINER Arturo Vergara <hello@arturovm.me>
 
 COPY bin/registro-linux-amd64 /registro
 COPY static/dist /static
