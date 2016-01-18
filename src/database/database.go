@@ -18,6 +18,25 @@ func init() {
 	if err != nil {
 		log.Fatalf("no se puede abrir conexión a db: %s", err.Error())
 	}
+
+	t := "CREATE TABLE IF NOT EXISTS teams " +
+		"(id int primary key, nombre varchar(30), " +
+		"nombre_proyecto varchar(30));"
+	_, err = db.Exec(t)
+	if err != nil {
+		log.Fatalf("imposible crear base de datos 'teams': %s",
+			err.Error())
+	}
+
+	u := "CREATE TABLE IF NOT EXISTS " +
+		"users (id int primary key, " +
+		"team int references teams(id), " +
+		"nombre varchar(30), tipo_id int, num_id varchar(50));"
+	_, err = db.Exec(u)
+	if err != nil {
+		log.Fatalf("imposible crear base de datos 'users': %s",
+			err.Error())
+	}
 }
 
 // DB proporciona el handler a la base de datos

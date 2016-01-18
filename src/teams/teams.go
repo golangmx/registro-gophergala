@@ -4,9 +4,9 @@ import "database"
 
 // Team representa a un equipo
 type Team struct {
-	ID          int    `json:"id"`
-	Name        string `json:"name"`
-	ProjectName string `json:"project_name"`
+	ID             int    `json:"id"`
+	Nombre         string `json:"nombre"`
+	NombreProyecto string `json:"nombre_proyecto"`
 	//Members *[]members.Member
 }
 
@@ -16,10 +16,10 @@ func AllTeams() (*[]Team, error) {
 	if err != nil {
 		return nil, err
 	}
-	var teams []Team
+	teams := make([]Team, 0)
 	for rows.Next() {
 		var t Team
-		err = rows.Scan(&t.ID, &t.Name, &t.ProjectName)
+		err = rows.Scan(&t.ID, &t.Nombre, &t.NombreProyecto)
 		if err != nil {
 			return nil, err
 		}
