@@ -8,6 +8,7 @@
     "chai": "~3.4.2",
     "mocha": "~2.3.4",
     "semantic": "~2.1.8",
-    "vue-router": "~0.7.9"
+    "vue-router": "~0.7.9",
+    "vue-resource": "~0.6.1"
   }
 }
