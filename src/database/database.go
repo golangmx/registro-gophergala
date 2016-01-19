@@ -20,7 +20,7 @@ func init() {
 	}
 
 	t := "CREATE TABLE IF NOT EXISTS teams " +
-		"(id int primary key, nombre varchar(30), " +
+		"(id serial primary key, nombre varchar(30), " +
 		"proyecto varchar(30));"
 	_, err = db.Exec(t)
 	if err != nil {
@@ -29,7 +29,7 @@ func init() {
 	}
 
 	u := "CREATE TABLE IF NOT EXISTS " +
-		"users (id int primary key, " +
+		"users (id serial primary key, " +
 		"team int references teams(id), " +
 		"nombre varchar(30), tipo_id int, num_id varchar(50));"
 	_, err = db.Exec(u)
