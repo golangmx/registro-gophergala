@@ -4,9 +4,9 @@ import "database"
 
 // Team representa a un equipo
 type Team struct {
-	ID             int    `json:"id"`
-	Nombre         string `json:"nombre"`
-	NombreProyecto string `json:"nombre_proyecto"`
+	ID       int    `json:"id"`
+	Nombre   string `json:"nombre"`
+	Proyecto string `json:"proyecto"`
 	//Members *[]members.Member
 }
 
