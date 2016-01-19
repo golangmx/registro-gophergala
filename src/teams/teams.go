@@ -19,7 +19,7 @@ func AllTeams() (*[]Team, error) {
 	teams := make([]Team, 0)
 	for rows.Next() {
 		var t Team
-		err = rows.Scan(&t.ID, &t.Nombre, &t.NombreProyecto)
+		err = rows.Scan(&t.ID, &t.Nombre, &t.Proyecto)
 		if err != nil {
 			return nil, err
 		}
@@ -27,4 +27,14 @@ func AllTeams() (*[]Team, error) {
 	}
 	err = rows.Err()
 	return &teams, err
+}
+
+// Save guarda un equipo en la base de datos
+func (t *Team) Save() error {
+	_, err := database.DB().Exec("INSERT INTO teams (nombre, proyecto) "+
+		"VALUES ($1, $2)", t.Nombre, t.Proyecto)
+	if err != nil {
+		return err
+	}
+	return nil
 }
