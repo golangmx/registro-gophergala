@@ -1,10 +1,13 @@
 {
   "name": "static",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "semantic": "~2.1.8"
+  },
   "devDependencies": {
     "chai": "~3.4.2",
     "mocha": "~2.3.4",
-    "vue": "~1.0.14"
+    "vue": "~1.0.15",
+    "semantic": "~2.1.8"
   }
 }
