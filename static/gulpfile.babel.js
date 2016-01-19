@@ -23,23 +23,23 @@ gulp.task('styles', () => {
 });
 
 gulp.task('scripts', () => {
-  return gulp.src('app/scripts/**/*.js')
+  return gulp.src('app/scripts/**/*.{js,vue}')
     .pipe($.plumber())
-    .pipe($.sourcemaps.init())
-    .pipe($.babel())
-    .pipe($.sourcemaps.write('.'))
+    .pipe($.if('*.js', $.sourcemaps.init()))
+    .pipe($.if('*.js', $.babel()))
+    .pipe($.if('*.js', $.sourcemaps.write('.')))
     .pipe(gulp.dest('.tmp/scripts/src'));
     //.pipe(reload({stream: true}));
 });
 
 gulp.task('browserify', () => {
     let b = browserify('.tmp/scripts/src/main.js', {
-        transform: [debowerify, vueify]
+        transform: [debowerify, vueify],
+        extensions: [".js", ".vue"]
     });
     return b.bundle()
       .pipe(source('bundle.js'))
       .pipe(buffer())
-      .pipe($.plumber())
       .pipe(gulp.dest('.tmp/scripts'))
       .pipe(reload({stream: true}));
 });
@@ -125,8 +125,8 @@ gulp.task('serve', ['styles', 'scripts', 'browserify', 'fonts'], () => {
   ]).on('change', reload);
 
   gulp.watch('app/styles/**/*.css', ['styles']);
-  gulp.watch('app/scripts/**/*.js', ['scripts']);
-  gulp.watch('.tmp/scripts/**/*.js', ['browserify']);
+  gulp.watch('app/scripts/**/*.{js,vue}', ['scripts']);
+  gulp.watch('.tmp/scripts/**/*.{js,vue}', ['browserify']);
   gulp.watch('app/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
@@ -155,8 +155,8 @@ gulp.task('serve:test', ['scripts'], () => {
     }
   });
 
-  gulp.watch('app/scripts/**/*.js', ['scripts']);
-  gulp.watch('.tmp/scripts/**/*.js', ['browserify']);
+  gulp.watch('app/scripts/**/*.{js,vue}', ['scripts']);
+  gulp.watch('.tmp/scripts/**/*.{js,vue}', ['browserify']);
   gulp.watch('test/spec/**/*.js').on('change', reload);
   gulp.watch('test/spec/**/*.js', ['lint:test']);
 });
