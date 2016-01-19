@@ -21,7 +21,7 @@ func init() {
 
 	t := "CREATE TABLE IF NOT EXISTS teams " +
 		"(id int primary key, nombre varchar(30), " +
-		"nombre_proyecto varchar(30));"
+		"proyecto varchar(30));"
 	_, err = db.Exec(t)
 	if err != nil {
 		log.Fatalf("imposible crear base de datos 'teams': %s",
