@@ -4,6 +4,11 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import browserSync from 'browser-sync';
 import del from 'del';
 import {stream as wiredep} from 'wiredep';
+import source from 'vinyl-source-stream';
+import buffer from 'vinyl-buffer';
+import browserify from 'browserify';
+import debowerify from 'debowerify';
+import vueify from 'vueify';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
@@ -18,13 +23,25 @@ gulp.task('styles', () => {
 });
 
 gulp.task('scripts', () => {
-  return gulp.src('app/scripts/**/*.js')
+  return gulp.src('app/scripts/**/*.{js,vue}')
     .pipe($.plumber())
-    .pipe($.sourcemaps.init())
-    .pipe($.babel())
-    .pipe($.sourcemaps.write('.'))
-    .pipe(gulp.dest('.tmp/scripts'))
-    .pipe(reload({stream: true}));
+    .pipe($.if('*.js', $.sourcemaps.init()))
+    .pipe($.if('*.js', $.babel()))
+    .pipe($.if('*.js', $.sourcemaps.write('.')))
+    .pipe(gulp.dest('.tmp/scripts/src'));
+    //.pipe(reload({stream: true}));
+});
+
+gulp.task('browserify', () => {
+    let b = browserify('.tmp/scripts/src/main.js', {
+        transform: [debowerify, vueify],
+        extensions: [".js", ".vue"]
+    });
+    return b.bundle()
+      .pipe(source('bundle.js'))
+      .pipe(buffer())
+      .pipe(gulp.dest('.tmp/scripts'))
+      .pipe(reload({stream: true}));
 });
 
 function lint(files, options) {
@@ -45,7 +62,7 @@ const testLintOptions = {
 gulp.task('lint', lint('app/scripts/**/*.js'));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 
-gulp.task('html', ['styles', 'scripts'], () => {
+gulp.task('html', ['styles', 'scripts', 'browserify'], () => {
   return gulp.src('app/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if('*.js', $.uglify()))
@@ -88,7 +105,7 @@ gulp.task('extras', () => {
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
-gulp.task('serve', ['styles', 'scripts', 'fonts'], () => {
+gulp.task('serve', ['styles', 'scripts', 'browserify', 'fonts'], () => {
   browserSync({
     notify: false,
     port: 9000,
@@ -108,7 +125,8 @@ gulp.task('serve', ['styles', 'scripts', 'fonts'], () => {
   ]).on('change', reload);
 
   gulp.watch('app/styles/**/*.css', ['styles']);
-  gulp.watch('app/scripts/**/*.js', ['scripts']);
+  gulp.watch('app/scripts/**/*.{js,vue}', ['scripts']);
+  gulp.watch('.tmp/scripts/**/*.{js,vue}', ['browserify']);
   gulp.watch('app/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
@@ -137,7 +155,8 @@ gulp.task('serve:test', ['scripts'], () => {
     }
   });
 
-  gulp.watch('app/scripts/**/*.js', ['scripts']);
+  gulp.watch('app/scripts/**/*.{js,vue}', ['scripts']);
+  gulp.watch('.tmp/scripts/**/*.{js,vue}', ['browserify']);
   gulp.watch('test/spec/**/*.js').on('change', reload);
   gulp.watch('test/spec/**/*.js', ['lint:test']);
 });
