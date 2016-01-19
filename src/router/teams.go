@@ -36,4 +36,13 @@ func postTeam(res http.ResponseWriter, req *http.Request) {
 		res.Write([]byte(""))
 		return
 	}
+	err = t.Save()
+	if err != nil {
+		logger.LogErr(err.Error())
+		res.WriteHeader(http.StatusInternalServerError)
+		res.Write([]byte(""))
+		return
+	}
+	res.WriteHeader(http.StatusCreated)
+	res.Write([]byte(""))
 }
