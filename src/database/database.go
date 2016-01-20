@@ -24,17 +24,17 @@ func init() {
 		"proyecto varchar(30));"
 	_, err = db.Exec(t)
 	if err != nil {
-		log.Fatalf("imposible crear base de datos 'teams': %s",
+		log.Fatalf("imposible crear tabla 'teams': %s",
 			err.Error())
 	}
 
-	u := "CREATE TABLE IF NOT EXISTS " +
-		"users (id serial primary key, " +
+	m := "CREATE TABLE IF NOT EXISTS " +
+		"members (id serial primary key, " +
 		"team int references teams(id), " +
 		"nombre varchar(30), tipo_id int, num_id varchar(50));"
-	_, err = db.Exec(u)
+	_, err = db.Exec(m)
 	if err != nil {
-		log.Fatalf("imposible crear base de datos 'users': %s",
+		log.Fatalf("imposible crear tabla 'members': %s",
 			err.Error())
 	}
 }
