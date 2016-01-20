@@ -25,7 +25,8 @@ router.map({
 		component: Equipos
 	},
 	'/equipos/:id': {
-		name: 'equipo'
+		name: 'equipo',
+		component: Equipos
 	}
 });
 

@@ -18,8 +18,8 @@
 						<div class="ui four cards">
 							<equipo-card
 								v-for="e in equipos"
-								:equpo="e"
-								:index="$index">
+								:equipo="e"
+								:id="e.id">
 							</equpo-card>
 						</div>
 					</div>
@@ -42,11 +42,11 @@
 		},
 		ready: function() {
 			this.$http.get('/api/teams').then((res) => {
-				let j = JSON.parse(res.responseText);
-				this.equipos = j;
+				let d = res.data;
+				this.equipos = d;
 			}, (err) => {
 				this.error = true;
-				this.message = "¡Oops! Algo salió mal.";
+				this.message = "¡Oops! Algo salió mal. Status " + err.status + ".";
 			});
 		},
 		components: {

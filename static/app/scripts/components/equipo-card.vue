@@ -1,5 +1,5 @@
 <template>
-	<a class="card" v-link="{ name: 'equipo', params: { id: index } }">
+	<a class="card" v-link="{ name: 'equipo', params: { id: id } }">
 		<div class="content">
 			<div class="header">{{ equipo.nombre }}</div>
 			<div class="subheader">{{ equipo.proyecto }}</div>
@@ -12,11 +12,11 @@
 
 <script>
 	export default {
-		props: ['equipo', 'index'],
+		props: ['equipo', 'id'],
 		computed: {
 			memberCount: function() {
 				let l = this.equipo.miembros.length
-				return l > 1 ? l + ' miembro' : l + ' miembros';
+				return l > 1 ? l + ' miembros' : l + ' miembro';
 			}
 		}
 	}
