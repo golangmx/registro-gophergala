@@ -8,7 +8,7 @@
 				</div>
 				<div class="ten column grid">
 					<div class="row">
-						<form class="ui form" @submit.stop.prevent="send">
+						<form class="ui form" @submit.stop.prevent="send" :class="{ 'loading': formLoading, 'success': formSuccess, 'error': formError }">
 							<div class="ui info message">
 								<div class="header">Nota</div>
 								<p>Sólo es necesario que un miembro del equipo llene el registro.</p>
@@ -100,6 +100,13 @@
 									</div>
 								</div>
 							</div>
+							<div class="ui success message">
+								<p>{{ formMessage }}</p>
+							</div>
+							<div class="ui error message">
+								<p>{{ formMessage }}</p>
+								<p>Puedes reportar errores <a href="https://github.com/golangmx/registro-gophergala">aquí</a>.<p>
+							</div>
 							<button class="large ui primary button" type="submit" :disabled="submitDisabled">Enviar</button>
 						</form>
 					</div>
@@ -113,6 +120,10 @@
 	export default {
 		data: function() {
 			return {
+				formLoading: false,
+				formError: false,
+				formSuccess: false,
+				formMessage: "",
 				equipo: {
 					nombre: "",
 					proyecto: ""
@@ -164,7 +175,19 @@
 					return x.nombres != m.nombres && x.apellidos != m.apellidos;
 				});
 			},
+			clearForm: function() {
+				this.usuario.tipo_id = 0;
+				this.miembros = [];
+				[this.equipo.nombre, this.equipo.proyecto,
+					this.usuario.nombres, this.usuario.apellidos,
+					this.usuario.numero_id, this.miembro.nombres,
+					this.miembro.apellidos] = "";
+			},
 			send: function(ev) {
+				this.formMessage = "";
+				this.formError = false;
+				this.formSuccess = false;
+				this.formLoading = true;
 				let u = this.usuario;
 				u.tipo_id = +u.tipo_id;
 				let m = this.miembros;
@@ -172,10 +195,29 @@
 				let e = this.equipo;
 				e.miembros = m;
 				this.$http.post('/api/teams', e).then((res) => {
-					console.log(res);
+					this.formLoading = false;
+					if (res.status != 201) {
+						this.formMessage = "¡Oops! Recibimos una respuesta que no esperábamos.";
+						this.formError = true;
+						return;
+					}
+					this.formMessage = "¡Gracias! Tu registro fue procesado correctamente.";
+					this.formSuccess = true;
+					this.clearForm();
 				}, (err) => {
-					console.log("err");
-					console.log(err);
+					this.formLoading = false;
+					this.formError = true;
+					switch (err.status) {
+						case 500:
+							this.formMessage = "¡Oops! Algo extraño sucedió en el servidor (Status 500 Internal Server Error).";
+							break;
+						case 400:
+							this.formMessage = "Hmm… La información enviada al servidor tiene un formato incorrecto. (Status 400 Bad Request).";
+							break;
+						default:
+							this.formMessage = "¡Oops! Hubo un error: Status " + res.status ".";
+							break;
+					}
 				});
 			}
 		}
