@@ -215,7 +215,7 @@
 							this.formMessage = "Hmm… La información enviada al servidor tiene un formato incorrecto. (Status 400 Bad Request).";
 							break;
 						default:
-							this.formMessage = "¡Oops! Hubo un error: Status " + res.status ".";
+							this.formMessage = "¡Oops! Hubo un error: Status " + res.status + ".";
 							break;
 					}
 				});
