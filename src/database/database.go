@@ -20,21 +20,22 @@ func init() {
 	}
 
 	t := "CREATE TABLE IF NOT EXISTS teams " +
-		"(id int primary key, nombre varchar(30), " +
-		"nombre_proyecto varchar(30));"
+		"(id serial primary key, nombre varchar(30), " +
+		"proyecto varchar(30));"
 	_, err = db.Exec(t)
 	if err != nil {
-		log.Fatalf("imposible crear base de datos 'teams': %s",
+		log.Fatalf("imposible crear tabla 'teams': %s",
 			err.Error())
 	}
 
-	u := "CREATE TABLE IF NOT EXISTS " +
-		"users (id int primary key, " +
+	m := "CREATE TABLE IF NOT EXISTS " +
+		"members (id serial primary key, " +
 		"team int references teams(id), " +
-		"nombre varchar(30), tipo_id int, num_id varchar(50));"
-	_, err = db.Exec(u)
+		"nombres varchar(30), apellidos varchar(30), " +
+		"tipo_id int, numero_id varchar(50));"
+	_, err = db.Exec(m)
 	if err != nil {
-		log.Fatalf("imposible crear base de datos 'users': %s",
+		log.Fatalf("imposible crear tabla 'members': %s",
 			err.Error())
 	}
 }

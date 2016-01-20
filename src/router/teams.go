@@ -18,5 +18,31 @@ func getTeams(res http.ResponseWriter) {
 	}
 	res.Header().Set("Content-Type", "application/json")
 	enc := json.NewEncoder(res)
-	enc.Encode(teams)
+	err = enc.Encode(teams)
+	if err != nil {
+		logger.LogErr(err.Error())
+		res.WriteHeader(http.StatusInternalServerError)
+		res.Write([]byte(""))
+	}
+}
+
+func postTeam(res http.ResponseWriter, req *http.Request) {
+	var t teams.Team
+	dec := json.NewDecoder(req.Body)
+	err := dec.Decode(&t)
+	if err != nil {
+		logger.LogErr(err.Error())
+		res.WriteHeader(http.StatusBadRequest)
+		res.Write([]byte(""))
+		return
+	}
+	err = t.Save()
+	if err != nil {
+		logger.LogErr(err.Error())
+		res.WriteHeader(http.StatusInternalServerError)
+		res.Write([]byte(""))
+		return
+	}
+	res.WriteHeader(http.StatusCreated)
+	res.Write([]byte(""))
 }
