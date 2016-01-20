@@ -24,7 +24,7 @@ ifndef GB
 endif
 		env GOOS=linux GOARCH=amd64 gb build
 
-static/dist/scripts/bundle.js: $(staticsrc)
+static/dist: $(staticsrc)
 ifndef GULP
 		$(error "gulp no está instalado. Obtenlo en https://webpack.github.io")
 endif
