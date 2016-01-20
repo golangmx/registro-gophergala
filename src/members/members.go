@@ -45,7 +45,6 @@ func (m *Member) Save(teamID int) error {
 // SaveMultiple guarda varios miembros de manera concurrente
 func SaveMultiple(members []Member, teamID int) <-chan error {
 	c := make(chan error)
-	target := len(members) - 1
 	for i := range members {
 		go func(m Member) {
 			err := m.Save(teamID)
