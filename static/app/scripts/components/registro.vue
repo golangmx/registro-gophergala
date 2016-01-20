@@ -47,7 +47,7 @@
 												<div class="item" data-value="1">Pasaporte</div>
 											</div>
 										</div>
-										<input type="text" pattern="[0-9]+" v-model="usuario.id"/>
+										<input type="text" pattern="[0-9 ]+" v-model="usuario.numero_id"/>
 								</div>
 							</div>
 						<h4 class="ui dividing header">Integrantes</h4>
@@ -121,7 +121,7 @@
 					nombres: "",
 					apellidos: "",
 					tipo_id: 0,
-					id: null
+					numero_id: ""
 
 				},
 				miembro: {
@@ -153,7 +153,9 @@
 				let {nombres, apellidos} = this.miembro;
 				this.miembros = this.miembros.concat({
 					nombres: nombres,
-					apellidos: apellidos
+					apellidos: apellidos,
+					tipo_id: 0,
+					numero_id: ""
 				});
 				[this.miembro.nombres, this.miembro.apellidos] = ["", ""];
 			},
@@ -163,7 +165,9 @@
 				});
 			},
 			send: function(ev) {
-				let m = this.miembros.concat(this.usuario);
+				let u = this.usuario;
+				let m = this.miembros;
+				m = m.concat(u);
 				let e = this.equipo;
 				e.miembros = m;
 				this.$http.post('/api/teams', e).then((res) => {
