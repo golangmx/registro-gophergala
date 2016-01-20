@@ -166,6 +166,7 @@
 			},
 			send: function(ev) {
 				let u = this.usuario;
+				u.tipo_id = +u.tipo_id;
 				let m = this.miembros;
 				m = m.concat(u);
 				let e = this.equipo;
