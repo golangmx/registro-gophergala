@@ -31,7 +31,8 @@ func init() {
 	m := "CREATE TABLE IF NOT EXISTS " +
 		"members (id serial primary key, " +
 		"team int references teams(id), " +
-		"nombre varchar(30), tipo_id int, num_id varchar(50));"
+		"nombres varchar(30), apellidos varchar(30), " +
+		"tipo_id int, numero_id varchar(50));"
 	_, err = db.Exec(m)
 	if err != nil {
 		log.Fatalf("imposible crear tabla 'members': %s",
