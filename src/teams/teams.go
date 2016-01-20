@@ -45,9 +45,10 @@ func (t *Team) Save() error {
 		return err
 	}
 	c := members.SaveMultiple(t.Miembros, int(teamID))
-	for e := range c {
-		if e != nil {
-			return e
+	for i := 0; i < len(t.Miembros); i++ {
+		err = <-c
+		if err != nil {
+			return err
 		}
 	}
 	return nil

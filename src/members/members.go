@@ -1,8 +1,6 @@
 package members
 
-import (
-	"database"
-)
+import "database"
 
 // Member representa a un miembro del equipo
 type Member struct {
@@ -47,14 +45,12 @@ func (m *Member) Save(teamID int) error {
 // SaveMultiple guarda varios miembros de manera concurrente
 func SaveMultiple(members []Member, teamID int) <-chan error {
 	c := make(chan error)
-	for i, v := range members {
-		go func() {
-			err := v.Save(teamID)
+	target := len(members) - 1
+	for i := range members {
+		go func(m Member) {
+			err := m.Save(teamID)
 			c <- err
-			if i == len(members) {
-				close(c)
-			}
-		}()
+		}(members[i])
 	}
 	return c
 }
