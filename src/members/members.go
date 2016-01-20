@@ -24,7 +24,7 @@ type Member struct {
 // a ese equipo
 func ForTeam(id int) ([]*Member, error) {
 	rows, err := database.DB().Query("SELECT * FROM members "+
-		"WHERE id_equipo=$1", id)
+		"WHERE team=$1", id)
 	if err != nil {
 		return nil, err
 	}
