@@ -7,10 +7,10 @@ import (
 
 // Team representa a un equipo
 type Team struct {
-	ID       int               `json:"id"`
-	Nombre   string            `json:"nombre"`
-	Proyecto string            `json:"proyecto"`
-	Members  []*members.Member `json:"members"`
+	ID       int              `json:"id"`
+	Nombre   string           `json:"nombre"`
+	Proyecto string           `json:"proyecto"`
+	Miembros []members.Member `json:"miembros"`
 }
 
 // AllTeams hace lo que viene en la etiqueta
@@ -26,7 +26,7 @@ func AllTeams() ([]Team, error) {
 		if err != nil {
 			return nil, err
 		}
-		t.Members, err = members.ForTeam(t.ID)
+		t.Miembros, err = members.ForTeam(t.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -38,12 +38,13 @@ func AllTeams() ([]Team, error) {
 
 // Save guarda un equipo en la base de datos
 func (t *Team) Save() error {
-	_, err := database.DB().Exec("INSERT INTO teams (nombre, proyecto) "+
-		"VALUES ($1, $2)", t.Nombre, t.Proyecto)
+	var teamID int
+	err := database.DB().QueryRow("INSERT INTO teams (nombre, proyecto) "+
+		"VALUES ($1, $2) RETURNING id", t.Nombre, t.Proyecto).Scan(&teamID)
 	if err != nil {
 		return err
 	}
-	c := members.SaveMultiple(t.Members)
+	c := members.SaveMultiple(t.Miembros, int(teamID))
 	for e := range c {
 		if e != nil {
 			return e
