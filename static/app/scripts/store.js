@@ -27,10 +27,8 @@ store.fetchEquipo = id => {
 		store.fetchEquipos()
 			.then(equipos => {
 				let n = equipos.filter(e => (e.id === id));
-				console.log(JSON.stringify(n));
-				console.log(n.length);
 				if (n.length !== 1) {
-					reject('¡Oops! Ese equipo no existe.');
+					reject('¡Oops! Este equipo no existe.');
 				} else {
 					resolve(n[0]);
 				}
