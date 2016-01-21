@@ -1,8 +1,8 @@
 <template>
 	<a class="card" v-link="{ name: 'equipo', params: { id: id } }">
 		<div class="content">
-			<div class="header">{{ equipo.nombre }}</div>
-			<div class="subheader">{{ equipo.proyecto }}</div>
+			<div class="ui header">{{ equipo.nombre }}</div>
+			<div>{{ equipo.proyecto }}</div>
 		</div>
 		<div class="extra content">
 			<p><i class="user icon"></i> {{ memberCount }}</p>

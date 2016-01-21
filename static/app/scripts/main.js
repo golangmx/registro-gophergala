@@ -3,12 +3,7 @@ import Router from 'vue-router';
 import Resource from 'vue-resource';
 import Registro from './components/registro.vue';
 import Equipos from './components/equipos.vue';
-
-/* eslint-disable no-undef */
-$(document).ready(() => {
-	$('div.dropdown').dropdown();
-});
-/* eslint-enable no-undef */
+import Equipo from './components/equipo.vue';
 
 Vue.config.debug = true;
 
@@ -26,7 +21,7 @@ router.map({
 	},
 	'/equipos/:id': {
 		name: 'equipo',
-		component: Equipos
+		component: Equipo
 	}
 });
 

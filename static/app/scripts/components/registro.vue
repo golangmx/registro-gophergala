@@ -220,6 +220,13 @@
 					}
 				});
 			}
+		},
+		ready: function() {
+			/* eslint-disable no-undef */
+			$(document).ready(() => {
+				$('div.dropdown').dropdown();
+			});
+			/* eslint-enable no-undef */
 		}
 	}
 </script>
