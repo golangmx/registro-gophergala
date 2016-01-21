@@ -3,17 +3,19 @@ import axios from 'axios';
 
 const store = new EventEmitter();
 let cache = null;
+let cacheInvalidated = false;
 
 export default store;
 
 store.fetchEquipos = () => {
 	return new Promise((resolve, reject) => {
-		if (cache != null) {
+		if (cache !== null && cacheInvalidated !== true) {
 			resolve(cache);
 		} else {
 			axios.get('/api/teams')
 				.then(res => {
 					cache = res.data;
+					cacheInvalidated = false;
 					resolve(cache);
 				}).catch(res => {
 					reject('¡Oops! Algo salió mal. Status ' + res.status + '.');
@@ -44,7 +46,7 @@ store.postEquipo = e => {
 			if (res.status !== 201) {
 				reject('¡Oops! Recibimos una respuesta que no esperábamos.');
 			} else {
-				cache = cache !== null ? cache.concat(e) : cache;
+				cacheInvalidated = true;
 				resolve('¡Gracias! Tu registro fue procesado correctamente.');
 			}
 		}).catch(err => {

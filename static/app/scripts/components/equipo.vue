@@ -32,6 +32,9 @@
 									<p class="center aligned">{{ m.nombres }}</p>
 									<p class="center aligned">{{ m.apellidos }}</p>
 								</div>
+								<div class="extra content" v-if="m.numero_id.length > 0">
+									<p class="meta">{{ m.tipo_id === 0 ? 'IFE' : 'Pasaporte' }} {{ m.numero_id }}</p>
+								</div>
 							</div>
 						</div>
 					</div>
