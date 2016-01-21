@@ -1,0 +1,12 @@
+app:
+    build: .
+    ports:
+        - "8080:8080"
+    links:
+        - db
+db:
+    image: postgres
+    environment:
+        - POSTGRES_USER=ggala
+        - POSTGRES_PASSWORD=gopherz
+        - POSTGRES_DB=gophergala
