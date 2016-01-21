@@ -31,6 +31,7 @@
 
 <script>
 	import EquipoCard from './equipo-card.vue';
+	import store from '../store.js';
 
 	export default {
 		data: function() {
@@ -40,17 +41,21 @@
 				message: ""
 			};
 		},
-		ready: function() {
-			this.$http.get('/api/teams').then((res) => {
-				let d = res.data;
-				this.equipos = d;
-			}, (err) => {
-				this.error = true;
-				this.message = "¡Oops! Algo salió mal. Status " + err.status + ".";
-			});
-		},
 		components: {
 			'equipo-card': EquipoCard
+		},
+		route: {
+			data: function() {
+				return store.fetchEquipos().then(e => ({
+					equipos: e,
+					error: false,
+					message: ""
+				})).catch(err => ({
+					equipos: [],
+					error: true,
+					message: err
+				}));
+			}
 		}
 	}
 </script>
