@@ -117,6 +117,8 @@
 </template>
 
 <script>
+	import store from '../store.js';
+
 	export default {
 		data: function() {
 			return {
@@ -169,8 +171,8 @@
 					numero_id: ''
 				});
 				this.miembro = {
-					nombres = '',
-					apellidos = ''
+					nombres: '',
+					apellidos: ''
 				};
 			},
 			removeMember: function(m) {
@@ -180,20 +182,20 @@
 			},
 			clearForm: function() {
 				this.equipo = {
-					nombre = '',
-					proyecto = ''
+					nombre: '',
+					proyecto: ''
 				};
 
 				this.usuario = {
-					nombres = '',
-					apellidos = '',
-					tipo_id = 0,
-					numero_id = ''
+					nombres: '',
+					apellidos: '',
+					tipo_id: 0,
+					numero_id: ''
 				};
 
 				this.miembro = {
-					nombres = '',
-					apellidos = ''
+					nombres: '',
+					apellidos: ''
 				};
 
 				this.miembros = [];
@@ -209,30 +211,15 @@
 				m = m.concat(u);
 				let e = this.equipo;
 				e.miembros = m;
-				this.$http.post('/api/teams', e).then((res) => {
+				store.postEquipo(e).then(msg => {
 					this.formLoading = false;
-					if (res.status != 201) {
-						this.formMessage = '¡Oops! Recibimos una respuesta que no esperábamos.';
-						this.formError = true;
-						return;
-					}
-					this.formMessage = '¡Gracias! Tu registro fue procesado correctamente.';
+					this.formMessage = msg;
 					this.formSuccess = true;
 					this.clearForm();
-				}, (err) => {
+				}).catch(msg => {
 					this.formLoading = false;
+					this.formMessage = msg;
 					this.formError = true;
-					switch (err.status) {
-						case 500:
-							this.formMessage = '¡Oops! Algo extraño sucedió en el servidor (Status 500 Internal Server Error).';
-							break;
-						case 400:
-							this.formMessage = 'Hmm… La información enviada al servidor tiene un formato incorrecto. (Status 400 Bad Request).';
-							break;
-						default:
-							this.formMessage = '¡Oops! Hubo un error: Status ' + res.status + '.';
-							break;
-					}
 				});
 			}
 		},
