@@ -64,7 +64,7 @@
 									<input type="text" v-model="miembro.apellidos" @keydown.enter.stop.prevent="addMember"/>
 								</div>
 							</div>
-							<a class="right floated ui green basic button" :class="{ 'disabled': addMemberEnabled }" @click.stop.prevent="addMember">
+							<a class="right floated ui green basic button" :class="{ 'disabled': addMemberDisabled }" @click.stop.prevent="addMember">
 								<i class="add icon"></i>
 								Añadir al equipo
 							</a>
@@ -123,40 +123,40 @@
 				formLoading: false,
 				formError: false,
 				formSuccess: false,
-				formMessage: "",
+				formMessage: '',
 				equipo: {
-					nombre: "",
-					proyecto: ""
+					nombre: '',
+					proyecto: ''
 				},
 				usuario: {
-					nombres: "",
-					apellidos: "",
+					nombres: '',
+					apellidos: '',
 					tipo_id: 0,
-					numero_id: ""
+					numero_id: ''
 
 				},
 				miembro: {
-					nombres: "",
-					apellidos: ""
+					nombres: '',
+					apellidos: ''
 				},
 				miembros: []
 			}
 		},
 		computed: {
-			addMemberEnabled: function() {
-				return this.miembro.nombres == "" || this.miembro.apellidos == "";
+			addMemberDisabled: function() {
+				return this.miembro.nombres === '' || this.miembro.apellidos === '';
 			},
 			showUserCard: function() {
-				return this.usuario.nombres != "" || this.usuario.apellidos != "";
+				return this.usuario.nombres !== '' && this.usuario.apellidos !== '';
 			},
 			showDivider: function() {
-				return ((this.equipo.nombre != "" || this.equipo.proyecto != "") &&
+				return ((this.equipo.nombre !== '' || this.equipo.proyecto !== '') &&
 							(this.showUserCard || this.miembros.length > 0));
 			},
 			submitDisabled: function() {
-				return this.usuario.nombres == "" || this.usuario.apellidos == "" ||
-						this.usuario.id == "" || this.equipo.nombre == "" ||
-						this.equipo.proyecto == "";
+				return this.usuario.nombres === '' || this.usuario.apellidos === '' ||
+						this.usuario.numero_id === '' || this.equipo.nombre === '' ||
+						this.equipo.proyecto === '';
 			}
 		},
 		methods: {
@@ -166,9 +166,12 @@
 					nombres: nombres,
 					apellidos: apellidos,
 					tipo_id: 0,
-					numero_id: ""
+					numero_id: ''
 				});
-				[this.miembro.nombres, this.miembro.apellidos] = ["", ""];
+				this.miembro = {
+					nombres = '',
+					apellidos = ''
+				};
 			},
 			removeMember: function(m) {
 				this.miembros = this.miembros.filter((x) => {
@@ -176,15 +179,27 @@
 				});
 			},
 			clearForm: function() {
-				this.usuario.tipo_id = 0;
+				this.equipo = {
+					nombre = '',
+					proyecto = ''
+				};
+
+				this.usuario = {
+					nombres = '',
+					apellidos = '',
+					tipo_id = 0,
+					numero_id = ''
+				};
+
+				this.miembro = {
+					nombres = '',
+					apellidos = ''
+				};
+
 				this.miembros = [];
-				[this.equipo.nombre, this.equipo.proyecto,
-					this.usuario.nombres, this.usuario.apellidos,
-					this.usuario.numero_id, this.miembro.nombres,
-					this.miembro.apellidos] = "";
 			},
 			send: function(ev) {
-				this.formMessage = "";
+				this.formMessage = '';
 				this.formError = false;
 				this.formSuccess = false;
 				this.formLoading = true;
@@ -197,11 +212,11 @@
 				this.$http.post('/api/teams', e).then((res) => {
 					this.formLoading = false;
 					if (res.status != 201) {
-						this.formMessage = "¡Oops! Recibimos una respuesta que no esperábamos.";
+						this.formMessage = '¡Oops! Recibimos una respuesta que no esperábamos.';
 						this.formError = true;
 						return;
 					}
-					this.formMessage = "¡Gracias! Tu registro fue procesado correctamente.";
+					this.formMessage = '¡Gracias! Tu registro fue procesado correctamente.';
 					this.formSuccess = true;
 					this.clearForm();
 				}, (err) => {
@@ -209,13 +224,13 @@
 					this.formError = true;
 					switch (err.status) {
 						case 500:
-							this.formMessage = "¡Oops! Algo extraño sucedió en el servidor (Status 500 Internal Server Error).";
+							this.formMessage = '¡Oops! Algo extraño sucedió en el servidor (Status 500 Internal Server Error).';
 							break;
 						case 400:
-							this.formMessage = "Hmm… La información enviada al servidor tiene un formato incorrecto. (Status 400 Bad Request).";
+							this.formMessage = 'Hmm… La información enviada al servidor tiene un formato incorrecto. (Status 400 Bad Request).';
 							break;
 						default:
-							this.formMessage = "¡Oops! Hubo un error: Status " + res.status + ".";
+							this.formMessage = '¡Oops! Hubo un error: Status ' + res.status + '.';
 							break;
 					}
 				});
